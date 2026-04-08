@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #define MAX 100
@@ -15,27 +16,40 @@ double pop() {
     return stack[top--];
 }
 
-int main(int argc, char *argv[]) {
+int is_number(char *s) {
+    return isdigit(s[0]);
+}
 
-    for (int i = 1; i < argc; i++) {
+int main() {
+    char input[200];
 
-        if (isdigit(argv[i][0])) {
-            push(atof(argv[i]));
+    printf("Nhap bieu thuc RPN: ");
+    fgets(input, sizeof(input), stdin);
+
+    char *token = strtok(input, " \n");
+
+    while (token != NULL) {
+
+        // nếu là số
+        if (is_number(token)) {
+            push(atof(token));
         }
         else {
             double b = pop();
             double a = pop();
 
-            switch (argv[i][0]) {
+            switch (token[0]) {
                 case '+': push(a + b); break;
                 case '-': push(a - b); break;
                 case '*': push(a * b); break;
                 case '/': push(a / b); break;
             }
         }
+
+        token = strtok(NULL, " \n");
     }
 
-    printf("Result: %.2f\n", pop());
+    printf("Ket qua: %.2f\n", pop());
 
     return 0;
 }
